@@ -132,7 +132,7 @@ class Juego {
          */
         setTimeout( function() {
             self.apagarColor(color)
-        }, 200 )
+        }, 400 )
     }
 
     
@@ -211,8 +211,10 @@ class Juego {
         https://sweetalert.js.org/guides/
     */
     gano(){
+        //Se desea guardar la referencia de la variable this ya que al llamar a setTimeout el valor de this cambia
+        const self = this 
         swal ( "Simon" ,  "Ganó!" ,  "success" ).then(function(){
-            this.inicializar()
+            self.inicializar()
         })
     }
 
@@ -221,8 +223,10 @@ class Juego {
         https://sweetalert.js.org/guides/
     */
     perdio () {
+        //Se desea guardar la referencia de la variable this ya que al llamar a setTimeout el valor de this cambia
+        const self = this 
         swal ( "Simon" ,  "Perdió!" ,  "error" ).then(function(){
-            this.inicializar()
+            self.inicializar()
         })
     }
 
