@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Simon Dice</title>
+    <!-- Agregar una hoja de estilos a la página -->
+    <link rel="stylesheet" href="css/simon.css">
+  </head>
+  <body>
+    <div class="gameboard">
+      <div id="celeste" class="color celeste left" data-color="celeste"></div>
+      <div id="violeta" class="color violeta right" data-color="violeta"></div>
+      <div id="naranja" class="color naranja left" data-color="naranja"></div>
+      <div id="verde" class="color verde right" data-color="verde"></div>
+      <!-- El botón tiene activado el evento click con el llamado a una función llamada empezarJuego() -->
+      <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+    </div>
+    <!-- Importar Sweet Alert para mostrar los mensajes finales -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <!-- Importar el JS donde está declarada la clase -->
+    <script src="js/Juego.js"></script>
+    <!-- Importar el archivo donde se crea la instancia de la clase. El orden SI IMPORTA -->
+    <script src="js/simon.js"></script>
+  </body>
+</html>
