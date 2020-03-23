@@ -9,10 +9,13 @@ class Juego {
         un atributo de clase llamado colores. Para ello se utiliza la palabra reservada this.
         https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Classes/constructor
     */
-    constructor(colores) {
+    constructor(nombre,colores, pageElements) {
+        this.nombre = nombre
         this.colores = colores
+        this.pageElements = pageElements
         this.inicializar()
-        this.siguienteNivel()
+        this.iniciarTiempo()
+        setTimeout(this.siguienteNivel.bind(this),500)
     }
 
     /* 
@@ -24,9 +27,12 @@ class Juego {
         https://developer.mozilla.org/es/docs/Web/JavaScript/Guide/Funciones
     */
     inicializar () {
+        this.vidas = 3
         this.nivel = 1
         this.ULTIMO_NIVEL = 5
         
+        this.setHeaderColor('#000')
+        this.setFooterColor('#000')
         //Obtener un elemento del DOM a través de su ID
         // document.getElementById("btnEmpezar").classList.add('hide')
         //Ejecutar métodos internos de la clase
@@ -38,6 +44,71 @@ class Juego {
         */
         this.elegirColor = this.elegirColor.bind(this)
         //console.log("Quiere inicializar con nivel: " + this.nivel)
+        this.actualizarValoresElementosPagina()
+    }
+
+    /**
+     * En esta función se desea controlar el tiempo que se muestra en la aplicación
+     */
+    iniciarTiempo() {
+        this.tiempo = 0 //Se declara una variable global tiempo
+        /**
+         * Se hace uso de la función setInterval cuyo objetivo es ejecutar una función cada
+         * n cantidad de milisegundos.Más información:
+         * https://www.w3schools.com/jsref/met_win_setinterval.asp
+         * https://developer.mozilla.org/es/docs/Web/API/WindowTimers/setInterval
+         */
+        this.idIntervalo = setInterval(()=>{
+            this.tiempo++
+            const tiempoMinSeg = this.convertirNumeroATiempo(this.tiempo)
+            this.pageElements.tiempoJuego.innerText = tiempoMinSeg
+        },1000)
+    }
+
+    /**
+     * Función para parar el avance del tiempo y dejarlo nuevamente en 0,
+     * Usa el método clearInterval que para la ejecución de una función 
+     * setInterval llamada anteriormente.
+     * https://www.w3schools.com/jsref/met_win_clearinterval.asp
+     * https://developer.mozilla.org/es/docs/Web/API/WindowTimers/clearInterval
+     */
+    finalizarTiempo() {
+        this.tiempo = 0 //Se declara una variable global tiempo
+        clearInterval(this.idIntervalo)
+        this.pageElements.tiempoJuego.innerText = '00:00'
+    }
+
+    /**
+     * retorna una cadena de tipo mm:ss
+     * @param {*} numero cantidad de segundos
+     */
+    convertirNumeroATiempo(numero) {
+        const minutos = this.convertirADosDigitos(parseInt(numero/60))
+        const segundos = this.convertirADosDigitos(parseInt(numero%60))
+        return `${minutos}:${segundos}`
+    }
+
+    /**
+     * Si el número es de menos dígitos, retorna uno con dos dígitos
+     * @param {*} numero numero convertir
+     */
+    convertirADosDigitos(numero) {
+        if(numero<10){
+            return '0' + numero
+        }
+        return numero
+    }
+
+    /**
+     * En este método se actualizan los elementos del DOM para que los valores de nuestras variables de Javascript
+     * sean visibles al usuario final y sepa cómo se va desarrollando su juego.
+     * Los elementos del DOM se toman del objeto JSON pageElements que se recibe desde el constructor
+     */
+    actualizarValoresElementosPagina(){
+        this.pageElements.nombreJugador.innerText = this.nombre
+        this.pageElements.ultimoNivel.innerText = this.ULTIMO_NIVEL
+        this.pageElements.nivelActual.innerText = this.nivel
+        this.pageElements.vidasRestantes.innerText = this.vidas
     }
 
     /* Método creado para mostrar/ocultar el botón de "Empezar a jugar!" */
@@ -85,8 +156,8 @@ class Juego {
      */
     siguienteNivel() {
         this.subnivel = 0
+        this.actualizarValoresElementosPagina()
         this.iluminarSecuencia()
-        this.agregarEventosClick()
     }
 
     /* 
@@ -95,6 +166,7 @@ class Juego {
         del objeto JSON de colores que como claves tiene las cadenas de texto con el nombre de los colores.
     */
     iluminarSecuencia() {
+        this.actualizarEstadoJuego(0)
         for( let i = 0; i<this.nivel; i++ ){
             //Almacenar el retorno de una función de clase en una variable, se envía como parámetro el número en la posición i de secuencia
             let nombreColor = this.transformarColorDeNumeroATexto( this.secuencia[i] )
@@ -110,8 +182,15 @@ class Juego {
              */
             setTimeout(function(){
                 self.iluminarColor(nombreColor)
-            }, 1000 * i )
+            }, 700 * i )
         }
+        /**
+         * Se desea que el juego permita hacer click en los colores únicamente cuando la secuencia termine de ejecutarse.
+         */
+        setTimeout(()=>{
+            this.actualizarEstadoJuego(1)
+            this.agregarEventosClick()
+        }, (this.nivel)*700)
     }
 
     /* 
@@ -133,6 +212,17 @@ class Juego {
         setTimeout( function() {
             self.apagarColor(color)
         }, 400 )
+    }
+
+    /**
+     * Método para mostrar al usuario el estado actual del juego
+     * @param {*} nuevoEstado numero con el nuevo estado [0: Iluminar Secuencia, 1: Tu Turno]
+     */
+    actualizarEstadoJuego(nuevoEstado){
+        const estado = (nuevoEstado==0) ? 'Iluminar Secuencia' : '¡Tu turno!'
+        const colorEstado = (nuevoEstado==0) ? 'red' : 'green'
+        this.pageElements.estadoJuego.innerText = estado
+        this.pageElements.estadoJuego.style.color = colorEstado
     }
 
     
@@ -174,6 +264,24 @@ class Juego {
     }
 
     /**
+     * Toma del objeto global pageElements el header y actualiza su estilo,
+     * específicamente su color de fondo
+     * @param {*} color string con código hexadecimal del nuevo color
+     */
+    setHeaderColor(color){
+        this.pageElements.header.style.backgroundColor = color
+    }
+
+    /**
+     * Toma del objeto global pageElements el footer y actualiza su estilo,
+     * específicamente su color de fondo
+     * @param {*} color string con código hexadecimal del nuevo color
+     */
+    setFooterColor(color){
+        this.pageElements.footer.style.backgroundColor = color
+    }
+
+    /**
      * Método en donde va la lógica del juego. Cuando el usuario hace clic en uno de los colores
      * este método es ejecutado. Aqui se verifican todos los parámetros involucrados como el nivel,
      * el subnivel, la secuencia, los colores y demás.
@@ -184,6 +292,9 @@ class Juego {
         //console.log(ev.target.dataset.color)
         const nombreColor = ev.target.dataset.color
         const numeroColor = this.transformarColorDeTextoANumero(nombreColor)
+        const hexaColor = this.transformarColorDeTextoAHexadecimal(nombreColor)
+        this.setHeaderColor(hexaColor)
+        this.setFooterColor(hexaColor)
         // console.log(numeroColor)
         this.iluminarColor(nombreColor)
         if( this.secuencia[ this.subnivel ] === numeroColor){
@@ -195,15 +306,50 @@ class Juego {
                 if((this.ULTIMO_NIVEL+1) == this.nivel){
                     this.gano()
                 } else {
-                    const self = this
-                    setTimeout( function () {
-                        self.siguienteNivel()
-                    },1000)
+                    this.avanzarDeNivel()
                 }
             }
         } else {
-            this.perdio()
+            this.vidas--
+            //Evaluar la cantidad de vidas
+            if(this.vidas == 0){
+                this.perdio()
+            } else {
+                this.perdioVida()
+            }
         }
+    }
+
+    /**
+     * El usuario realizó bien toda la secuencia de un nivel, se le informa y se le pasa al
+     * siguiente.
+     */
+    avanzarDeNivel(){
+        this.actualizarValoresElementosPagina()
+        swal('¡Pasaste de Nivel!', `Muy bien, avanzaste de nivel. Siguiente: ${this.nivel}`, 'success').then(()=>{
+            this.setHeaderColor('#000')
+            this.setFooterColor('#000')
+            const self = this
+            setTimeout( function () {
+                self.siguienteNivel()
+            },500)
+        })
+    }
+
+    /**
+     * El usuario realizó mal la cadena, aún tenía vidas, se le alerta del nuevo estado
+     */
+    perdioVida() {
+        swal('¡Fallaste!', `Te queda(n) ${this.vidas} vida(s)`, 'warning').then(()=>{
+            this.setHeaderColor('#000')
+            this.setFooterColor('#000')
+            this.eliminarEventosClick()
+            const self = this
+            this.actualizarValoresElementosPagina()
+            setTimeout( function () {
+                self.siguienteNivel()
+            },1000)
+        })
     }
 
     /* 
@@ -212,8 +358,12 @@ class Juego {
     */
     gano(){
         //Se desea guardar la referencia de la variable this ya que al llamar a setTimeout el valor de this cambia
+        const tiempoMinSeg = this.convertirNumeroATiempo(this.tiempo)
+        this.finalizarTiempo()
         const self = this 
-        swal ( "Simon" ,  "Ganó!" ,  "success" ).then(function(){
+        swal ( "¡Ganaste!" ,  
+            "Has completado todos los niveles del juego correctamente. Tardaste " + tiempoMinSeg ,  
+            "success" ).then(function(){
             self.inicializar()
         })
     }
@@ -224,8 +374,12 @@ class Juego {
     */
     perdio () {
         //Se desea guardar la referencia de la variable this ya que al llamar a setTimeout el valor de this cambia
+        const tiempoMinSeg = this.convertirNumeroATiempo(this.tiempo)
+        this.finalizarTiempo()
         const self = this 
-        swal ( "Simon" ,  "Perdió!" ,  "error" ).then(function(){
+        swal ( "¡Perdió!" ,  
+        "Has perdido la totalidad de tus vidas. ¡Intentalo de nuevo!. Tardaste " + tiempoMinSeg ,  
+        "error" ).then(function(){
             self.inicializar()
         })
     }
@@ -263,5 +417,23 @@ class Juego {
                 return 3
         }
     }
+
+    /* 
+        Uso de la estructura de control switch, para evaluar una cadena y retornar otra
+        Recibe el nombre del color y retorna su cadena hexadecimal
+        https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Sentencias/switch
+    */
+   transformarColorDeTextoAHexadecimal(color) {
+    switch (color) {
+        case 'celeste':
+            return '#22a6b3'
+        case 'violeta':
+            return '#be2edd'
+        case 'naranja':
+            return '#f0932b'
+        case 'verde':
+            return '#6ab04c'
+    }
+}
 
 }

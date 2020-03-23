@@ -7,19 +7,46 @@
     <link rel="stylesheet" href="css/simon.css">
   </head>
   <body>
-    <div class="gameboard">
-      <div id="celeste" class="color celeste left" data-color="celeste"></div>
-      <div id="violeta" class="color violeta right" data-color="violeta"></div>
-      <div id="naranja" class="color naranja left" data-color="naranja"></div>
-      <div id="verde" class="color verde right" data-color="verde"></div>
-      <!-- El botón tiene activado el evento click con el llamado a una función llamada empezarJuego() -->
-      <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+    <header>
+      <nav>
+        <a href="#">Simon</a>
+      </nav>
+    </header>
+    <div class="container">
+      <div class="container-gameboard">
+        <div class="gameboard">
+          <div id="celeste" class="color celeste left" data-color="celeste"></div>
+          <div id="violeta" class="color violeta right" data-color="violeta"></div>
+          <div id="naranja" class="color naranja left" data-color="naranja"></div>
+          <div id="verde" class="color verde right" data-color="verde"></div>
+          <!-- El botón tiene activado el evento click con el llamado a una función llamada empezarJuego() -->
+          <button id="btnEmpezar" class="btn-start" onclick="empezarJuego()">Empezar a jugar!</button>
+        </div>
+      </div>
+      <div class="estadisticas">
+        <h1>Estadisticas</h1>
+        <h3>Nombre:  <span id="nombre-jugador"></span></h3>
+        <h3>Nivel Actual:  <span id="nivel-actual"></span></h3>
+        <h3>Último nivel:  <span id="ultimo-nivel"></span></h3>
+        <h3>Tiempo en Juego:  <span id="tiempo-juego"></span></h3>
+        <h3>Vidas restantes:  <span id="vidas-restantes"></span></h3>
+        <h3>Estado del Juego:  <span id="estado-juego"></span></h3>
+      </div>
     </div>
+    <footer>
+      <div>
+        <mail:to>carlos.castaneda@ucaldas.edu.co</mail:to>
+      </div>
+      <div>
+        <a href="#" id="instrucciones">Instrucciones</a>
+      </div>
+    </footer>
     <!-- Importar Sweet Alert para mostrar los mensajes finales -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <!-- Importar el JS donde está declarada la clase -->
     <script src="js/Juego.js"></script>
     <!-- Importar el archivo donde se crea la instancia de la clase. El orden SI IMPORTA -->
     <script src="js/simon.js"></script>
+    
   </body>
 </html>

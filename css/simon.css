@@ -2,6 +2,8 @@ body {
     margin: 0;
     background: #dedede;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     height: 100vh;
   }
@@ -70,9 +72,62 @@ body {
     font-size: 2.5rem;
     position: absolute;
     top: calc(50% - 50px);
-    left: calc(50% - 200px);
+    left: calc(25% - 200px);
   }
 
   .hide {
     display: none;
+  }
+
+  header {
+    width: 100%;
+  }
+
+  a {
+    text-decoration: none;
+    color: white;
+  }
+
+  nav {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: black;
+    height: 5vh;
+    color: white;
+  }
+
+  nav a {
+    padding-right: 15px;
+    font-size: 30px;
+  }
+
+  .container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .container>div { /* Sólo los Div que son hijos directos */
+    width: 50%;
+  }
+
+  .estadisticas {
+    border-left: 1px solid #2c3e50;
+    padding: 50px;
+  }
+
+  footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: black;
+    height: 5vh; 
+    color: white;
+  }
+
+  footer>div {
+    margin: 0 15px;
   }
