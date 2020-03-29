@@ -424,16 +424,16 @@ class Juego {
         https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Sentencias/switch
     */
    transformarColorDeTextoAHexadecimal(color) {
-    switch (color) {
-        case 'celeste':
-            return '#22a6b3'
-        case 'violeta':
-            return '#be2edd'
-        case 'naranja':
-            return '#f0932b'
-        case 'verde':
-            return '#6ab04c'
+        switch (color) {
+            case 'celeste':
+                return '#22a6b3'
+            case 'violeta':
+                return '#be2edd'
+            case 'naranja':
+                return '#f0932b'
+            case 'verde':
+                return '#6ab04c'
+        }
     }
-}
 
 }
